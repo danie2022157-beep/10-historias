@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   historias:
-    image: ghcr.io/danie2022157-beep/10-historias:latest
+    image: ebook-app:latest
     deploy:
       replicas: 1
       labels:
