@@ -1,0 +1,8 @@
+{
+  "name": "10 Histórias para Sonhar - Landing Page",
+  "description": "Uma página de vendas mágica e encantadora para um eBook de histórias infantis, com ilustrações geradas por IA para aumentar a conversão.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
