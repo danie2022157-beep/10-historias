@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for Vite app
 FROM node:18-alpine AS build
 WORKDIR /app
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 # install deps
 COPY package*.json ./
