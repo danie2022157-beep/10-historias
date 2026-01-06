@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    image: historias-para-sonhar:latest
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production

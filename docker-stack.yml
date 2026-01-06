@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  historias:
+    image: ghcr.io/danie2022157-beep/10-historias:latest
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.historias.rule=Host(`ebook.onethy.com`)
+        - traefik.http.routers.historias.entrypoints=websecure
+        - traefik.http.routers.historias.tls=true
+        - traefik.http.routers.historias.tls.certresolver=letsencryptresolver
+        - traefik.http.services.historias.loadbalancer.server.port=80
+    networks:
+      - onet
+    secrets:
+      - gemini_api_key
+
+networks:
+  onet:
+    external: true
+
+secrets:
+  gemini_api_key:
+    external: true
