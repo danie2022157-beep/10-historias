@@ -1,9 +1,0 @@
-node_modules
-dist
-.dockerignore
-.git
-.gitignore
-.vscode
-npm-debug.log
-.env
-.DS_Store

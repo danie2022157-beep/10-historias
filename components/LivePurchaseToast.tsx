@@ -1,0 +1,1 @@
+// Arquivo removido para eliminar simulação de social proof fake.

@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { STORIES } from '../constants';
+import * as Icons from './Icons';
 
 interface FloatingButtonProps {
   onClick: () => void;
@@ -9,18 +9,11 @@ interface FloatingButtonProps {
 
 export const FloatingButton: React.FC<FloatingButtonProps> = ({ onClick }) => {
   const [isVisible, setIsVisible] = useState(false);
-  
-  // Pegamos as 3 primeiras capas para criar um efeito de "coleção"
-  const previewImages = [STORIES[0].imageUrl, STORIES[1].imageUrl, STORIES[2].imageUrl];
 
   useEffect(() => {
     const toggleVisibility = () => {
-      // Aparece após rolar 500px
-      if (window.scrollY > 500) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      if (window.scrollY > 400) setIsVisible(true);
+      else setIsVisible(false);
     };
     window.addEventListener('scroll', toggleVisibility);
     return () => window.removeEventListener('scroll', toggleVisibility);
@@ -29,64 +22,51 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({ onClick }) => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center w-full px-6 md:w-auto">
-          
-          {/* Pilha de Livros (Preview do Produto) */}
+        <div className="fixed bottom-0 left-0 right-0 z-[120] md:bottom-8 md:px-6 pointer-events-none flex justify-center">
           <motion.div
-            initial={{ y: 20, opacity: 0, scale: 0.8 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 20, opacity: 0, scale: 0.8 }}
-            className="mb-[-15px] flex items-center justify-center relative h-16 md:h-24 w-32 md:w-40"
+            initial={{ y: 150, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 150, opacity: 0 }}
+            className="pointer-events-auto w-full max-w-2xl bg-white/95 backdrop-blur-3xl border-t md:border border-indigo-100 p-3 md:rounded-[3rem] shadow-[0_-15px_50px_rgba(0,0,0,0.1),0_30px_60px_rgba(79,70,229,0.25)] flex items-center justify-between gap-4"
           >
-            {previewImages.map((img, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ rotate: 0 }}
-                animate={{ 
-                  rotate: idx === 0 ? -12 : idx === 1 ? 0 : 12,
-                  x: idx === 0 ? -25 : idx === 1 ? 0 : 25,
-                  z: idx === 1 ? 10 : 0
-                }}
-                className="absolute w-12 md:w-16 aspect-[3/4] rounded-lg overflow-hidden shadow-2xl border-2 border-white bg-white"
-                style={{ zIndex: idx === 1 ? 20 : 10 }}
-              >
-                <img src={img} alt="Product Preview" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </motion.div>
-            ))}
-          </motion.div>
+            <div className="flex items-center gap-4 pl-2 md:pl-6">
+              <div className="flex -space-x-6 md:-space-x-8">
+                {STORIES.slice(0, 4).map((img, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ rotate: -15 }}
+                    animate={{ rotate: (i - 1.5) * 8 }}
+                    className="w-10 h-14 md:w-14 md:h-20 rounded-lg border-2 border-white overflow-hidden shadow-xl bg-indigo-900 z-10"
+                  >
+                    <img src={img.imageUrl} className="w-full h-full object-cover" alt="Capa" />
+                  </motion.div>
+                ))}
+              </div>
+              
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="bg-amber-400 text-indigo-950 text-[8px] md:text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">OFERTA ATIVA</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[9px] md:text-xs line-through font-bold">R$ 27,00</span>
+                  <p className="text-indigo-950 font-black text-sm md:text-2xl leading-none">R$ 2,00</p>
+                </div>
+              </div>
+            </div>
 
-          {/* Botão Principal */}
-          <motion.button
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ 
-              y: 0, 
-              opacity: 1,
-              scale: [1, 1.03, 1],
-            }}
-            exit={{ y: 50, opacity: 0 }}
-            transition={{
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onClick}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-indigo-950 px-6 md:px-12 py-4 md:py-6 rounded-2xl md:rounded-full border-2 border-white shadow-[0_20px_50px_rgba(251,191,36,0.4)] flex items-center justify-center gap-3 relative z-30"
-          >
-            <div className="flex flex-col items-start leading-none text-left">
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Acesso Imediato</span>
-              <span className="text-sm md:text-xl font-display font-black tracking-wider uppercase">
-                QUERO A BIBLIOTECA
-              </span>
-            </div>
-            <div className="h-10 w-[1px] bg-indigo-950/10 mx-1 hidden md:block" />
-            <div className="bg-indigo-950 text-white text-[10px] md:text-xs font-black px-3 py-1.5 rounded-lg shadow-inner">
-              R$ 19,90
-            </div>
-          </motion.button>
-          
-          {/* Detalhe de brilho atrás do botão */}
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-amber-400/20 blur-3xl -z-10 rounded-full" />
+            <motion.button
+              onClick={onClick}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-indigo-600 text-white pl-6 pr-5 py-4 md:py-6 rounded-2xl md:rounded-[2rem] font-display font-black text-xs md:text-lg uppercase tracking-[0.05em] flex items-center gap-3 group shadow-lg"
+            >
+              <span className="hidden sm:inline">QUERO O MEU AGORA</span>
+              <span className="sm:hidden">LIBERAR AGORA</span>
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <Icons.ChevronDownIcon className="w-5 h-5 -rotate-90" />
+              </div>
+            </motion.button>
+          </motion.div>
         </div>
       )}
     </AnimatePresence>

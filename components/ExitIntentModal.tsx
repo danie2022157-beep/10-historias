@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './Button';
@@ -15,22 +14,15 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ onAccept }) =>
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    // 1. Lógica para DESKTOP (Mouse leave)
     const handleMouseLeave = (e: MouseEvent) => {
       if (e.clientY <= 0 && !wasShown) {
         triggerModal();
       }
     };
 
-    // 2. Lógica para MOBILE (Scroll Up Rápido)
-    // No mobile, a intenção de saída é comumente detectada quando o usuário
-    // rola para cima rapidamente tentando alcançar a barra de endereços.
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollDelta = lastScrollY.current - currentScrollY;
-
-      // Se o usuário estiver no topo (primeiros 20% da página) 
-      // e rolar para cima rapidamente (> 20px em um frame)
       if (currentScrollY < 1000 && scrollDelta > 25 && !wasShown) {
         triggerModal();
       }
@@ -38,11 +30,9 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ onAccept }) =>
     };
 
     const triggerModal = () => {
-      // Pequeno delay para garantir que não seja um erro de sensibilidade
       setTimeout(() => {
         setIsOpen(true);
         setWasShown(true);
-        // Desabilita o scroll do body quando o modal abre (prevenção de bug mobile)
         document.body.style.overflow = 'hidden';
       }, 100);
     };
@@ -114,7 +104,7 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ onAccept }) =>
             </h3>
 
             <p className="text-slate-500 text-sm md:text-lg font-medium mb-8 leading-relaxed px-2">
-              Você está a um passo de transformar a rotina do seu filho. O desconto de <span className="font-bold text-indigo-900">80%</span> está ativo por apenas mais alguns segundos.
+              Você está a um passo de transformar a rotina do seu filho. O desconto exclusivo está ativo por apenas mais alguns segundos.
             </p>
 
             {/* Cronômetro Compacto */}
@@ -134,7 +124,7 @@ export const ExitIntentModal: React.FC<ExitIntentModalProps> = ({ onAccept }) =>
                 onClick={handleStay}
                 className="w-full py-6 md:py-8 text-lg md:text-2xl rounded-2xl shadow-xl"
               >
-                APROVEITAR AGORA (R$ 19,90)
+                APROVEITAR AGORA
               </Button>
               <button 
                 onClick={handleClose}
